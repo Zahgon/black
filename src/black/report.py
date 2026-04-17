@@ -67,15 +67,7 @@ class Report:
         - if any files were changed and --check is being used, return 1;
         - otherwise return 0.
         """
-        # According to http://tldp.org/LDP/abs/html/exitcodes.html starting with
-        # 126 we have special return codes reserved by the shell.
-        if self.failure_count:
-            return 123
-
-        elif self.change_count and self.check:
-            return 1
-
-        return 0
+        pass
 
     def __str__(self) -> str:
         """Render a color report of the current state.

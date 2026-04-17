@@ -186,13 +186,7 @@ def convert_unchanged_lines(src_node: Node, lines: Collection[tuple[int, int]]) 
 
 
 def _contains_standalone_comment(node: LN) -> bool:
-    if isinstance(node, Leaf):
-        return node.type == STANDALONE_COMMENT
-    else:
-        for child in node.children:
-            if _contains_standalone_comment(child):
-                return True
-        return False
+    pass
 
 
 class _TopLevelStatementsVisitor(Visitor[None]):
@@ -211,42 +205,10 @@ class _TopLevelStatementsVisitor(Visitor[None]):
     def visit_simple_stmt(self, node: Node) -> Iterator[None]:
         # This is only called for top-level statements, since `visit_suite`
         # won't visit its children nodes.
-        yield from []
-        newline_leaf = last_leaf(node)
-        if not newline_leaf:
-            return
-        assert (
-            newline_leaf.type == NEWLINE
-        ), f"Unexpectedly found leaf.type={newline_leaf.type}"
-        # We need to find the furthest ancestor with the NEWLINE as the last
-        # leaf, since a `suite` can simply be a `simple_stmt` when it puts
-        # its body on the same line. Example: `if cond: pass`.
-        ancestor = furthest_ancestor_with_last_leaf(newline_leaf)
-        if not _get_line_range(ancestor).intersection(self._lines_set):
-            _convert_node_to_standalone_comment(ancestor)
+        pass
 
     def visit_suite(self, node: Node) -> Iterator[None]:
-        yield from []
-        # If there is a STANDALONE_COMMENT node, it means parts of the node tree
-        # have fmt on/off/skip markers. Those STANDALONE_COMMENT nodes can't
-        # be simply converted by calling str(node). So we just don't convert
-        # here.
-        if _contains_standalone_comment(node):
-            return
-        # Find the semantic parent of this suite. For `async_stmt` and
-        # `async_funcdef`, the ASYNC token is defined on a separate level by the
-        # grammar.
-        semantic_parent = node.parent
-        if semantic_parent is not None:
-            if (
-                semantic_parent.prev_sibling is not None
-                and semantic_parent.prev_sibling.type == ASYNC
-            ):
-                semantic_parent = semantic_parent.parent
-        if semantic_parent is not None and not _get_line_range(
-            semantic_parent
-        ).intersection(self._lines_set):
-            _convert_node_to_standalone_comment(semantic_parent)
+        pass
 
 
 def _convert_unchanged_line_by_line(node: Node, lines_set: set[int]) -> None:

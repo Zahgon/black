@@ -97,29 +97,17 @@ class Line:
         Raises ValueError when any `leaf` is appended after a standalone comment
         or when a standalone comment is not the first leaf on the line.
         """
-        if (
-            self.bracket_tracker.depth == 0
-            or self.bracket_tracker.any_open_for_or_lambda()
-        ):
-            if self.is_comment:
-                raise ValueError("cannot append to standalone comments")
-
-            if self.leaves and leaf.type == STANDALONE_COMMENT:
-                raise ValueError(
-                    "cannot append standalone comments to a populated line"
-                )
-
-        self.append(leaf, preformatted=preformatted)
+        pass
 
     @property
     def is_comment(self) -> bool:
         """Is this line a standalone comment?"""
-        return len(self.leaves) == 1 and self.leaves[0].type == STANDALONE_COMMENT
+        pass
 
     @property
     def is_decorator(self) -> bool:
         """Is this line a decorator?"""
-        return bool(self) and self.leaves[0].type == token.AT
+        pass
 
     @property
     def is_import(self) -> bool:
@@ -134,44 +122,22 @@ class Line:
     @property
     def is_class(self) -> bool:
         """Is this line a class definition?"""
-        return (
-            bool(self)
-            and self.leaves[0].type == token.NAME
-            and self.leaves[0].value == "class"
-        )
+        pass
 
     @property
     def is_stub_class(self) -> bool:
         """Is this line a class definition with a body consisting only of "..."?"""
-        return self.is_class and self.leaves[-3:] == [
-            Leaf(token.DOT, ".") for _ in range(3)
-        ]
+        pass
 
     @property
     def is_def(self) -> bool:
         """Is this a function definition? (Also returns True for async defs.)"""
-        try:
-            first_leaf = self.leaves[0]
-        except IndexError:
-            return False
-
-        try:
-            second_leaf: Leaf | None = self.leaves[1]
-        except IndexError:
-            second_leaf = None
-        return (first_leaf.type == token.NAME and first_leaf.value == "def") or (
-            first_leaf.type == token.ASYNC
-            and second_leaf is not None
-            and second_leaf.type == token.NAME
-            and second_leaf.value == "def"
-        )
+        pass
 
     @property
     def is_stub_def(self) -> bool:
         """Is this line a function definition with a body consisting only of "..."?"""
-        return self.is_def and self.leaves[-4:] == [Leaf(token.COLON, ":")] + [
-            Leaf(token.DOT, ".") for _ in range(3)
-        ]
+        pass
 
     @property
     def is_class_paren_empty(self) -> bool:
@@ -179,27 +145,12 @@ class Line:
 
         Those are unnecessary and should be removed.
         """
-        return (
-            bool(self)
-            and len(self.leaves) == 4
-            and self.is_class
-            and self.leaves[2].type == token.LPAR
-            and self.leaves[2].value == "("
-            and self.leaves[3].type == token.RPAR
-            and self.leaves[3].value == ")"
-        )
+        pass
 
     @property
     def _is_triple_quoted_string(self) -> bool:
         """Is the line a triple quoted string?"""
-        if not self or self.leaves[0].type != token.STRING:
-            return False
-        value = self.leaves[0].value
-        if value.startswith(('"""', "'''")):
-            return True
-        if value.startswith(("r'''", 'r"""', "R'''", 'R"""')):
-            return True
-        return False
+        pass
 
     @property
     def is_docstring(self) -> bool:
@@ -209,14 +160,12 @@ class Line:
     @property
     def is_chained_assignment(self) -> bool:
         """Is the line a chained assignment"""
-        return [leaf.type for leaf in self.leaves].count(token.EQUAL) > 1
+        pass
 
     @property
     def opens_block(self) -> bool:
         """Does this line open a new level of indentation."""
-        if len(self.leaves) == 0:
-            return False
-        return self.leaves[-1].type == token.COLON
+        pass
 
     def is_fmt_pass_converted(
         self, *, first_leaf_matches: Callable[[Leaf], bool] | None = None
@@ -1209,10 +1158,7 @@ class EmptyLineTracker:
 
 def enumerate_reversed(sequence: Sequence[T]) -> Iterator[tuple[Index, T]]:
     """Like `reversed(enumerate(sequence))` if that were possible."""
-    index = len(sequence) - 1
-    for element in reversed(sequence):
-        yield (index, element)
-        index -= 1
+    pass
 
 
 def append_leaves(

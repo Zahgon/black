@@ -49,7 +49,4 @@ class DebugVisitor(Visitor[T]):
 
         Convenience method for debugging.
         """
-        v: DebugVisitor[None] = DebugVisitor()
-        if isinstance(code, str):
-            code = lib2to3_parse(code)
-        list(v.visit(code))
+        pass

@@ -120,75 +120,13 @@ def read_pyproject_toml(
     Returns the path to a successfully found and read configuration file, None
     otherwise.
     """
-    if not value:
-        value = find_pyproject_toml(
-            ctx.params.get("src", ()), ctx.params.get("stdin_filename", None)
-        )
-        if value is None:
-            return None
-
-    try:
-        config = parse_pyproject_toml(value)
-    except (OSError, ValueError) as e:
-        raise click.FileError(
-            filename=value, hint=f"Error reading configuration file: {e}"
-        ) from None
-
-    if not config:
-        return None
-    else:
-        spellcheck_pyproject_toml_keys(ctx, list(config), value)
-        # Sanitize the values to be Click friendly. For more information please see:
-        # https://github.com/psf/black/issues/1458
-        # https://github.com/pallets/click/issues/1567
-        config = {
-            k: str(v) if not isinstance(v, (list, dict)) else v
-            for k, v in config.items()
-        }
-
-    target_version = config.get("target_version")
-    if target_version is not None and not isinstance(target_version, list):
-        raise click.BadOptionUsage(
-            "target-version", "Config key target-version must be a list"
-        )
-
-    exclude = config.get("exclude")
-    if exclude is not None and not isinstance(exclude, str):
-        raise click.BadOptionUsage("exclude", "Config key exclude must be a string")
-
-    extend_exclude = config.get("extend_exclude")
-    if extend_exclude is not None and not isinstance(extend_exclude, str):
-        raise click.BadOptionUsage(
-            "extend-exclude", "Config key extend-exclude must be a string"
-        )
-
-    line_ranges = config.get("line_ranges")
-    if line_ranges is not None:
-        raise click.BadOptionUsage(
-            "line-ranges", "Cannot use line-ranges in the pyproject.toml file."
-        )
-
-    default_map: dict[str, Any] = {}
-    if ctx.default_map:
-        default_map.update(ctx.default_map)
-    default_map.update(config)
-
-    ctx.default_map = default_map
-    return value
+    pass
 
 
 def spellcheck_pyproject_toml_keys(
     ctx: click.Context, config_keys: list[str], config_file_path: str
 ) -> None:
-    invalid_keys: list[str] = []
-    available_config_options = {param.name for param in ctx.command.params}
-    invalid_keys = [key for key in config_keys if key not in available_config_options]
-    if invalid_keys:
-        keys_str = ", ".join(map(repr, invalid_keys))
-        out(
-            f"Invalid config keys detected: {keys_str} (in {config_file_path})",
-            fg="red",
-        )
+    pass
 
 
 def target_version_option_callback(
@@ -199,7 +137,7 @@ def target_version_option_callback(
     This is its own function because mypy couldn't infer the type correctly
     when it was a lambda, causing mypyc trouble.
     """
-    return [TargetVersion[val.upper()] for val in v]
+    pass
 
 
 def _target_versions_exceed_runtime(
@@ -227,7 +165,7 @@ def enable_unstable_feature_callback(
     c: click.Context, p: click.Option | click.Parameter, v: tuple[str, ...]
 ) -> list[Preview]:
     """Compute the features from an --enable-unstable-feature flag."""
-    return [Preview[val] for val in v]
+    pass
 
 
 def re_compile_maybe_verbose(regex: str) -> Pattern[str]:
@@ -246,10 +184,7 @@ def validate_regex(
     param: click.Parameter,
     value: str | None,
 ) -> Pattern[str] | None:
-    try:
-        return re_compile_maybe_verbose(value) if value is not None else None
-    except re.error as e:
-        raise click.BadParameter(f"Not a valid regular expression: {e}") from None
+    pass
 
 
 @click.command(

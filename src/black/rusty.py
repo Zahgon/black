@@ -14,7 +14,7 @@ class Ok(Generic[T]):
         self._value = value
 
     def ok(self) -> T:
-        return self._value
+        pass
 
 
 class Err(Generic[E]):
